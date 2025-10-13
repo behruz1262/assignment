@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cafe Radar — Crowdsourced F&B Market Analytics</title>
+  <meta name="description" content="Cafe Radar is a crowdsourced market analytics platform for Korea's cafés and restaurants. See competitor pricing, opening hours, and local trends in one clean dashboard." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0c10;         /* near-black */
+      --panel:#0f1117;      /* deep slate */
+      --muted:#a9b0be;      /* gray-400 */
+      --text:#e8eefb;       /* off-white */
+      --brand:#7c5cff;      /* indigo */
+      --brand-2:#2df2ff;    /* aqua */
+      --ok:#2dd4bf;         /* teal */
+      --warn:#f59e0b;       /* amber */
+      --danger:#ef4444;     /* red */
+      --card:#12141d;       /* card base */
+      --stroke: rgba(255,255,255,.08);
+      --shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 0 0 1px var(--stroke);
+      --radius-xl: 20px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; font-family:'Plus Jakarta Sans',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif;
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(124,92,255,.18) 0%, transparent 60%),
+                  radial-gradient(900px 500px at 90% -20%, rgba(45,242,255,.18) 0%, transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.6;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{width:min(1200px, 92%);margin-inline:auto}
+    /* Header */
+    header{
+      position:sticky; top:0; z-index:50; backdrop-filter: blur(10px);
+      background:linear-gradient(180deg, rgba(11,12,16,.65), rgba(11,12,16,.35) 70%, transparent);
+      border-bottom:1px solid var(--stroke);
+    }
+    .nav{display:flex; align-items:center; justify-content:space-between; padding:16px 0}
+    .logo{display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:.2px}
+    .logo-badge{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
+      background:conic-gradient(from 210deg, var(--brand), var(--brand-2)); box-shadow: var(--shadow);
+    }
+    .nav a.btn{padding:10px 16px;border-radius:12px;border:1px solid var(--stroke)}
+    .btn-primary{background:linear-gradient(90deg,var(--brand),var(--brand-2)); color:#0b0c10; font-weight:800}
+    .btn-ghost{background:rgba(255,255,255,.04)}
+
+    /* Hero */
+    .hero{padding:72px 0 56px; position:relative}
+    .hero-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:28px}
+    .eyebrow{display:inline-flex; align-items:center; gap:10px; font-size:.9rem; color:var(--muted); background:rgba(124,92,255,.12); border:1px solid var(--stroke); padding:8px 12px; border-radius:999px}
+    .eyebrow svg{opacity:.8}
+    h1{font-size: clamp(2rem, 4.6vw, 3.6rem); line-height:1.1; margin:14px 0 12px}
+    .sub{font-size: clamp(1rem, 1.6vw, 1.15rem); color:#cbd5e1; max-width:60ch}
+    .hero-cta{display:flex; gap:12px; flex-wrap:wrap; margin-top:24px}
+    .note{font-size:.9rem; color:var(--muted)}
+    .screen{
+      background:linear-gradient(180deg, #0f1117, #0c0d12); border-radius:var(--radius-xl);
+      box-shadow: var(--shadow); border:1px solid var(--stroke); min-height:360px; padding:18px; position:relative; overflow:hidden
+    }
+    .screen .chrome{display:flex; gap:6px; margin-bottom:10px}
+    .dot{width:10px;height:10px;border-radius:999px;background:#353b4a}
+    .chart{position:absolute; inset:60px 18px 18px; border-radius:14px; background:linear-gradient(180deg, rgba(124,92,255,.07), rgba(0,0,0,.0)); border:1px dashed var(--stroke)}
+    .spark{position:absolute; height:120px; left:24px; right:24px; bottom:30px; opacity:.9}
+
+    /* Section */
+    section{padding:56px 0; scroll-margin-top: 90px}
+    .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+    .card{background:var(--card); border:1px solid var(--stroke); border-radius:18px; padding:20px; box-shadow: var(--shadow)}
+    .tag{display:inline-block; font-size:.85rem; color:#a7f3d0; background:rgba(45,212,191,.12); border:1px solid rgba(45,212,191,.25); padding:6px 10px; border-radius:999px; margin-bottom:8px}
+    .muted{color:var(--muted)}
+
+    .features .card h3{margin:12px 0 6px}
+
+    /* Two-col */
+    .two{display:grid; grid-template-columns: 1.1fr .9fr; gap:24px}
+
+    /* Pricing */
+    .pricing{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+    .price{font-size:2rem; font-weight:800; background:linear-gradient(90deg,var(--brand),var(--brand-2)); -webkit-background-clip:text; background-clip:text; color:transparent}
+    .plan .cta{display:block; margin-top:14px}
+
+    /* FAQ */
+    details{background:var(--card); border:1px solid var(--stroke); border-radius:14px; padding:16px}
+    details + details{margin-top:10px}
+    summary{cursor:pointer; font-weight:600}
+
+    /* Footer */
+    footer{padding:32px 0; color:var(--muted); border-top:1px solid var(--stroke)}
+
+    /* Responsive */
+    @media (max-width: 960px){
+      .hero-grid, .two{grid-template-columns:1fr}
+    }
+    @media (max-width: 840px){
+      .grid-3, .pricing{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container nav">
+      <a href="#" class="logo">
+        <span class="logo-badge" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 18c5-2 11-2 16 0" stroke="#0b0c10" stroke-width="2" stroke-linecap="round"/>
+            <path d="M6 8a6 6 0 1012 0" stroke="#0b0c10" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        Cafe&nbsp;Radar
+      </a>
+      <nav style="display:flex; gap:8px; align-items:center">
+        <a class="btn btn-ghost" href="#features">Features</a>
+        <a class="btn btn-ghost" href="#pricing">Pricing</a>
+        <a class="btn btn-ghost" href="#mission">Mission</a>
+        <a class="btn btn-primary" href="#beta">Join Beta</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12h18M12 3v18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Korea's first crowdsourced F&B analytics
+        </span>
+        <h1>Know your market. <span style="white-space:nowrap">Grow your business.</span></h1>
+        <p class="sub">Cafe Radar shows real prices, hours, promos, and trends for cafés and restaurants in <strong>your neighborhood</strong>—so you can price smart, plan hours, and launch with confidence.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#beta">Start free beta</a>
+          <a class="btn btn-ghost" href="#how">See how it works</a>
+        </div>
+        <p class="note">Early partners get <strong>3 months free</strong>. Limited seats.</p>
+      </div>
+      <div>
+        <div class="screen" aria-label="Product preview">
+          <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <div class="chart"></div>
+          <!-- simple inline chart illustration -->
+          <svg class="spark" viewBox="0 0 600 160" xmlns="http://www.w3.org/2000/svg" fill="none">
+            <defs>
+              <linearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="var(--brand)"/>
+                <stop offset="100%" stop-color="var(--brand-2)"/>
+              </linearGradient>
+            </defs>
+            <path d="M10 120 C 60 30, 120 80, 180 60 S 300 120, 360 70 480 90, 590 40" stroke="url(#grad)" stroke-width="6" stroke-linecap="round"/>
+            <g fill="url(#grad)" opacity=".28">
+              <circle cx="180" cy="60" r="6"/>
+              <circle cx="360" cy="70" r="6"/>
+              <circle cx="520" cy="60" r="6"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What / Problems -->
+  <section id="about">
+    <div class="container two">
+      <div class="card">
+        <span class="tag">What is Cafe Radar?</span>
+        <h2 style="margin:6px 0 8px">Crowdsourced insights for local F&B.</h2>
+        <p>Cafe Radar is a subscription platform where local owners anonymously contribute street‑level data—menu prices, opening hours, promos, and customer sentiment—and get back clean dashboards and competitor summaries for their <em>dong</em> or <em>gu</em>.</p>
+        <ul>
+          <li>See average prices for items like <em>Americano</em>, lunch sets, and pastries.</li>
+          <li>Compare open/close times to optimize staffing and capture early traffic.</li>
+          <li>Track trends (vegan, seasonal drinks, takeout vs. dine‑in) as they emerge.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="tag">Problems solved</span>
+        <h2 style="margin:6px 0 8px">Price with confidence. Choose better hours. Launch smarter.</h2>
+        <ul>
+          <li><strong>No affordable local intel:</strong> Hyper‑local benchmarking without enterprise price tags.</li>
+          <li><strong>Mispricing kills margins:</strong> Align pricing to your neighborhood’s willingness to pay.</li>
+          <li><strong>Guessing hours is costly:</strong> Discover when nearby shops actually open and get busy.</li>
+        </ul>
+        <p class="muted">Built for independents, pop‑ups, and growing micro‑chains across Korea.</p>
+      </div>
+    </div>
+  </section>
+  <!-- Features -->
+  <section id="features" class="features">
+    <div class="container">
+      <h2 style="margin-bottom:16px">Interactive features you can try now</h2>
+
+      <!-- Tabs -->
+      <div class="card" style="padding:12px">
+        <nav id="featTabs" style="display:flex; gap:8px; flex-wrap:wrap">
+          <button class="btn btn-ghost" data-tab="benchmarks">Price Benchmarks</button>
+          <button class="btn btn-ghost" data-tab="heatmap">Hours Heatmap</button>
+          <button class="btn btn-ghost" data-tab="trends">Promo & Trends</button>
+          <button class="btn btn-ghost" data-tab="summary">Competitor Summary</button>
+        </nav>
+      </div>
+
+      <!-- Price Benchmarks -->
+      <div id="tab-benchmarks" class="card" style="margin-top:12px">
+        <h3 style="margin-top:0">Neighborhood Price Benchmarks</h3>
+        <p class="muted">See live averages from sample data. Add your own to watch the numbers shift.</p>
+        <form id="benchFilter" style="display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:10px; margin:12px 0">
+          <label>
+            <span class="muted" style="display:block; font-size:.9rem">Item</span>
+            <select name="item" style="width:100%; padding:10px 12px; border-radius:10px; background:#0b0c10; color:var(--text); border:1px solid var(--stroke)">
+              <option>Americano</option>
+              <option>Latte</option>
+              <option>Sandwich</option>
+              <option>Pastry</option>
+            </select>
+          </label>
+          <label>
+            <span class="muted" style="display:block; font-size:.9rem">Area (dong/gu/city)</span>
+            <input name="area" placeholder="Busan, Suyeong‑gu" style="width:100%; padding:10px 12px; border-radius:10px; background:#0b0c10; color:var(--text); border:1px solid var(--stroke)" />
+          </label>
+          <label>
+            <span class="muted" style="display:block; font-size:.9rem">Radius</span>
+            <select name="radius" style="width:100%; padding:10px 12px; border-radius:10px; background:#0b0c10; color:var(--text); border:1px solid var(--stroke)">
+              <option value="0.5">0.5 km</option>
+              <option value="1" selected>1 km</option>
+              <option value="2">2 km</option>
+            </select>
+          </label>
+          <button class="btn btn-primary" type="submit" style="height:44px; align-self:end">Update</button>
+        </form>
+
+        <div style="overflow:auto">
+          <table id="benchTable" style="width:100%; border-collapse:collapse">
+            <thead>
+              <tr style="text-align:left">
+                <th style="padding:10px; border-bottom:1px solid var(--stroke)">Item</th>
+                <th style="padding:10px; border-bottom:1px solid var(--stroke)">Area</th>
+                <th style="padding:10px; border-bottom:1px solid var(--stroke)">Avg Price (₩)</th>
+                <th style="padding:10px; border-bottom:1px solid var(--stroke)">Min</th>
+                <th style="padding:10px; border-bottom:1px solid var(--stroke)">Max</th>
+                <th style="padding:10px; border-bottom:1px solid var(--stroke)">Data Points</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px">
+          <button id="exportCsv" class="btn btn-ghost">Export CSV</button>
+          <details>
+            <summary>Add a contribution</summary>
+            <form id="contribForm" style="display:grid; grid-template-columns:repeat(4, 1fr) auto; gap:10px; margin-top:8px">
+              <select name="item">
+                <option>Americano</option>
+                <option>Latte</option>
+                <option>Sandwich</option>
+                <option>Pastry</option>
+              </select>
+              <input name="area" placeholder="Busan, Haeundae‑gu"/>
+              <input name="price" type="number" min="1000" max="15000" step="50" placeholder="Price ₩"/>
+              <input name="source" placeholder="Optional note (receipt, etc.)"/>
+              <button class="btn btn-primary" type="submit">Save</button>
+            </form>
+            <p class="muted" style="margin-top:6px">Saved locally in your browser for demo purposes.</p>
+          </details>
+        </div>
+      </div>
+
+      <!-- Hours Heatmap -->
+      <div id="tab-heatmap" class="card" style="margin-top:12px; display:none">
+        <h3 style="margin-top:0">Hours & Capacity Heatmap</h3>
+        <p class="muted">Hover to see estimated traffic. Switch day to compare patterns.</p>
+        <div style="display:flex; gap:10px; align-items:center; margin:10px 0">
+          <label>
+            <span class="muted" style="display:block; font-size:.9rem">Day</span>
+            <select id="heatDay">
+              <option value="0">Mon</option>
+              <option value="1">Tue</option>
+              <option value="2">Wed</option>
+              <option value="3">Thu</option>
+              <option value="4">Fri</option>
+              <option value="5">Sat</option>
+              <option value="6">Sun</option>
+            </select>
+          </label>
+        </div>
+        <div id="heatGrid" style="display:grid; grid-template-columns:repeat(24, 1fr); gap:4px"></div>
+        <p id="heatTip" class="muted" style="margin-top:8px">12:00 — medium traffic</p>
+      </div>
+
+      <!-- Trends -->
+      <div id="tab-trends" class="card" style="margin-top:12px; display:none">
+        <h3 style="margin-top:0">Promo & Trend Tracking</h3>
+        <div style="display:flex; gap:10px; align-items:center; margin:10px 0">
+          <label>
+            <span class="muted" style="display:block; font-size:.9rem">Select item</span>
+            <select id="trendItem">
+              <option>Americano</option>
+              <option>Latte</option>
+              <option>Sandwich</option>
+              <option>Pastry</option>
+            </select>
+          </label>
+        </div>
+        <svg id="trendChart" viewBox="0 0 600 200" style="width:100%; height:240px; background:linear-gradient(180deg, rgba(124,92,255,.07), rgba(0,0,0,0)); border-radius:14px; border:1px dashed var(--stroke)"></svg>
+        <p class="muted" id="trendNote" style="margin-top:8px">Monthly demand index (last 6 months, demo data).</p>
+      </div>
+
+      <!-- Competitor Summary -->
+      <div id="tab-summary" class="card" style="margin-top:12px; display:none">
+        <h3 style="margin-top:0">Competitor Summary</h3>
+        <form id="summaryForm" style="display:grid; grid-template-columns:2fr 1fr auto; gap:10px; margin:12px 0">
+          <input name="area" placeholder="Area e.g., Busan, Gwangan‑dong"/>
+          <select name="item">
+            <option>Americano</option>
+            <option>Latte</option>
+            <option>Sandwich</option>
+            <option>Pastry</option>
+          </select>
+          <button class="btn btn-primary" type="submit">Generate</button>
+        </form>
+        <div id="summaryBox" class="card" style="background:#0b0c10"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how">
+    <div class="container two">
+      <div>
+        <h2>How it works</h2>
+        <ol>
+          <li><strong>Contribute:</strong> Add prices, hours, promos, or short observations from your neighborhood.</li>
+          <li><strong>Verify:</strong> Our light moderation and cross‑checks keep data clean and useful.</li>
+          <li><strong>Explore:</strong> Browse dashboards, heatmaps, and competitor summaries for your area.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">Mission Statement</h3>
+        <p id="mission">“Empower every small business owner with the market insights they need to compete—and thrive—in their neighborhood.”</p>
+        <p class="muted">We exist to democratize market analytics—giving independents the same strategic tools as big chains at a tiny fraction of the cost.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing">
+    <div class="container">
+      <h2 style="margin-bottom:16px">Simple pricing for small teams</h2>
+      <div class="pricing">
+        <div class="card plan">
+          <h3>Starter</h3>
+          <p class="muted">For new cafés or pop‑ups</p>
+          <p class="price">₩14,900<span style="font-size:.9rem;font-weight:600">/mo</span></p>
+          <ul>
+            <li>1 area (up to 1km radius)</li>
+            <li>Price benchmarks & hours heatmap</li>
+            <li>Basic trend tracking</li>
+          </ul>
+          <a href="#beta" class="btn btn-ghost cta">Start free</a>
+        </div>
+        <div class="card plan" style="outline:2px solid rgba(124,92,255,.35)">
+          <h3>Growth <span class="tag" style="margin-left:8px">Most Popular</span></h3>
+          <p class="muted">For busy independents</p>
+          <p class="price">₩39,000<span style="font-size:.9rem;font-weight:600">/mo</span></p>
+          <ul>
+            <li>3 areas + competitor summaries</li>
+            <li>Promo tracking & CSV export</li>
+            <li>Contribution credits</li>
+          </ul>
+          <a href="#beta" class="btn btn-primary cta">Start free</a>
+        </div>
+        <div class="card plan">
+          <h3>Teams</h3>
+          <p class="muted">For micro‑chains & franchises</p>
+          <p class="price">Custom</p>
+          <ul>
+            <li>Unlimited areas & seats</li>
+            <li>API access & SSO</li>
+            <li>Priority data verification</li>
+          </ul>
+          <a href="#beta" class="btn btn-ghost cta">Talk to sales</a>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:10px">Save more by contributing verified data—up to 50% off with credits.</p>
+    </div>
+  </section>
+
+  <!-- Beta / Form -->
+  <section id="beta">
+    <div class="container two">
+      <div class="card">
+        <h2>Join the private beta</h2>
+        <p>Be among the first to try Cafe Radar in Korea. Early partners receive <strong>3 months free</strong> and direct influence on the roadmap.</p>
+        <form onsubmit="event.preventDefault(); this.querySelector('.done').style.display='block'; this.reset();" aria-label="Beta signup form">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px">
+            <label>
+              <span class="muted" style="display:block; font-size:.9rem">Your Name</span>
+              <input required name="name" placeholder="홍길동 / Jane Kim" style="width:100%; padding:12px 14px; border-radius:12px; background:#0b0c10; color:var(--text); border:1px solid var(--stroke)" />
+            </label>
+            <label>
+              <span class="muted" style="display:block; font-size:.9rem">Business Email</span>
+              <input required type="email" name="email" placeholder="you@cafe.co.kr" style="width:100%; padding:12px 14px; border-radius:12px; background:#0b0c10; color:var(--text); border:1px solid var(--stroke)" />
+            </label>
+          </div>
+          <label style="display:block; margin-top:12px">
+            <span class="muted" style="display:block; font-size:.9rem">Primary Location (dong/gu/city)</span>
+            <input required name="location" placeholder="Busan, Suyeong‑gu" style="width:100%; padding:12px 14px; border-radius:12px; background:#0b0c10; color:var(--text); border:1px solid var(--stroke)" />
+          </label>
+          <button class="btn btn-primary" style="margin-top:14px">Request invite</button>
+          <p class="done" style="display:none; margin-top:10px; color:var(--ok)">Thanks! We’ll email your invite shortly.</p>
+          <p class="muted" style="margin-top:8px; font-size:.85rem">By requesting access you agree to our beta terms and privacy policy.</p>
+        </form>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:12px">
+          <h3 style="margin-top:0">What users say</h3>
+          <p>“We moved opening to 6:30am after seeing the hours map. Morning sales +18%.” — <strong>Seomyeon Coffee Lab</strong></p>
+          <p>“The price benchmarks gave us confidence to raise latte by ₩300.” — <strong>Gwangan Roasters</strong></p>
+        </div>
+        <div class="card">
+          <h3 style="margin-top:0">Compliance & Privacy</h3>
+          <ul>
+            <li>Aggregated, anonymized data only</li>
+            <li>Opt‑in contributions with clear controls</li>
+            <li>Moderation + cross‑validation on sensitive fields</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="container">
+      <h2 style="margin-bottom:16px">FAQ</h2>
+      <details>
+        <summary>Is this available outside Korea?</summary>
+        <p>Beta focuses on Korea. If you’re in another country, join the list—your interest helps us prioritize expansion.</p>
+      </details>
+      <details>
+        <summary>How do contribution credits work?</summary>
+        <p>Submitting verified updates (e.g., menu prices with receipt/photo proof) earns credits that discount your subscription automatically, up to 50% off.</p>
+      </details>
+      <details>
+        <summary>Will my data expose my business?</summary>
+        <p>No. We aggregate and anonymize contributions. We never publish personally identifying details without explicit consent.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap">
+      <p>© <span id="year"></span> Cafe Radar. All rights reserved.</p>
+      <p><a href="#">Terms</a> · <a href="#">Privacy</a> · <a href="#">Contact</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // === Demo Data ===
+    const seed = {
+      Americano: [
+        { area: 'Busan, Suyeong-gu', price: 2500 },
+        { area: 'Busan, Haeundae-gu', price: 2800 },
+        { area: 'Busan, Gwangan-dong', price: 3000 },
+        { area: 'Seoul, Mapo-gu', price: 3500 }
+      ],
+      Latte: [
+        { area: 'Busan, Suyeong-gu', price: 3800 },
+        { area: 'Busan, Haeundae-gu', price: 4200 },
+        { area: 'Seoul, Mapo-gu', price: 4700 }
+      ],
+      Sandwich: [
+        { area: 'Busan, Suyeong-gu', price: 5200 },
+        { area: 'Busan, Haeundae-gu', price: 5600 },
+        { area: 'Seoul, Mapo-gu', price: 6300 }
+      ],
+      Pastry: [
+        { area: 'Busan, Suyeong-gu', price: 2700 },
+        { area: 'Busan, Haeundae-gu', price: 2900 },
+        { area: 'Seoul, Mapo-gu', price: 3300 }
+      ]
+    };
+
+    const LS_KEY = 'cafeRadar_contrib_v1';
+    const getUserData = () => JSON.parse(localStorage.getItem(LS_KEY) || '{}');
+    const saveUserData = (d) => localStorage.setItem(LS_KEY, JSON.stringify(d));
+
+    // Merge seed with local contributions
+    function getDataset(){
+      const contrib = getUserData();
+      const merged = JSON.parse(JSON.stringify(seed));
+      for(const item of Object.keys(contrib)){
+        if(!merged[item]) merged[item] = [];
+        merged[item] = merged[item].concat(contrib[item]);
+      }
+      return merged;
+    }
+
+    // === Tabs ===
+    (function tabs(){
+      const btns = document.querySelectorAll('#featTabs [data-tab]');
+      const panels = {
+        benchmarks: document.getElementById('tab-benchmarks'),
+        heatmap: document.getElementById('tab-heatmap'),
+        trends: document.getElementById('tab-trends'),
+        summary: document.getElementById('tab-summary')
+      };
+      function activate(key){
+        Object.values(panels).forEach(p=>p.style.display='none');
+        panels[key].style.display='block';
+        btns.forEach(b=>{
+          const on = b.dataset.tab===key;
+          b.setAttribute('aria-selected', on);
+          b.classList.toggle('btn-primary', on);
+          b.classList.toggle('btn-ghost', !on);
+        });
+      }
+      btns.forEach(b=>b.addEventListener('click',()=>activate(b.dataset.tab)));
+      // set default
+      activate('benchmarks');
+    })();
+
+    // === Benchmarks ===
+    const benchForm = document.getElementById('benchFilter');
+    const benchTableBody = document.querySelector('#benchTable tbody');
+    function renderBenchmarks(){
+      const ds = getDataset();
+      const item = benchForm.item.value;
+      const area = (benchForm.area.value||'').toLowerCase();
+      const rows = (ds[item]||[]).filter(r=>!area || r.area.toLowerCase().includes(area));
+      if(rows.length===0){
+        benchTableBody.innerHTML = '<tr><td colspan="6" class="muted" style="padding:10px">No data yet. Try adding a contribution below.</td></tr>';
+        return;
+      }
+      const prices = rows.map(r=>r.price);
+      const avg = Math.round(prices.reduce((a,b)=>a+b,0)/prices.length);
+      const min = Math.min(...prices), max = Math.max(...prices);
+      benchTableBody.innerHTML = `<tr>
+        <td style="padding:10px;border-bottom:1px solid var(--stroke)">${item}</td>
+        <td style="padding:10px;border-bottom:1px solid var(--stroke)">${benchForm.area.value||'All'}</td>
+        <td style="padding:10px;border-bottom:1px solid var(--stroke)">${avg.toLocaleString()}</td>
+        <td style="padding:10px;border-bottom:1px solid var(--stroke)">${min.toLocaleString()}</td>
+        <td style="padding:10px;border-bottom:1px solid var(--stroke)">${max.toLocaleString()}</td>
+        <td style="padding:10px;border-bottom:1px solid var(--stroke)">${rows.length}</td>
+      </tr>`;
+    }
+    benchForm?.addEventListener('submit', e=>{e.preventDefault(); renderBenchmarks();});
+
+    // Add contribution
+    const contribForm = document.getElementById('contribForm');
+    contribForm?.addEventListener('submit', e=>{
+      e.preventDefault();
+      const form = new FormData(contribForm);
+      const item = form.get('item');
+      const area = form.get('area');
+      const price = Number(form.get('price'));
+      if(!item || !area || !price) return;
+      const d = getUserData();
+      if(!d[item]) d[item] = [];
+      d[item].push({ area, price });
+      saveUserData(d);
+      contribForm.reset();
+      renderBenchmarks();
+    });
+    // Export CSV from bench table
+    document.getElementById('exportCsv')?.addEventListener('click', ()=>{
+      const rows = Array.from(document.querySelectorAll('#benchTable tr'))
+        .map(tr => Array.from(tr.querySelectorAll('th,td'))
+          .map(td => '"' + td.textContent.replace(/"/g,'""') + '"')
+          .join(','))
+        .join('
+');
+      const blob = new Blob([rows], {type:'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = Object.assign(document.createElement('a'), { href:url, download:'benchmarks.csv' });
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    // Initial render
+    if(benchForm) renderBenchmarks();
+
+    // === Heatmap ===
+    const heatGrid = document.getElementById('heatGrid');
+    const heatTip = document.getElementById('heatTip');
+    const heatDay = document.getElementById('heatDay');
+
+    function seedHeat(){
+      // 7 days x 24 hours, values 0..100
+      const arr = Array.from({length:7}, (_,d)=>Array.from({length:24},(_,h)=>{
+        // busier at 8-10, 12-14, 18-21; weekends higher
+        let base = 10 + (h>=8&&h<=10?30:0) + (h>=12&&h<=14?25:0) + (h>=18&&h<=21?35:0);
+        if(d>=5) base += 15; // Sat/Sun
+        return Math.max(0, Math.min(100, Math.round(base + (Math.random()*12-6))));
+      }));
+      return arr;
+    }
+    const heatData = seedHeat();
+
+    function renderHeat(dayIdx=0){
+      if(!heatGrid) return;
+      heatGrid.innerHTML = '';
+      const row = heatData[dayIdx];
+      row.forEach((val,h)=>{
+        const cell = document.createElement('div');
+        const alpha = (0.15 + val/100*0.75).toFixed(2);
+        cell.style.cssText = `height:34px; border-radius:8px; background: linear-gradient(180deg, rgba(124,92,255,${alpha}), rgba(45,242,255,${alpha*0.9})); border:1px solid var(--stroke)`;
+        cell.title = `${String(h).padStart(2,'0')}:00 — ${val}`;
+        cell.addEventListener('mouseenter',()=>{
+          heatTip.textContent = `${String(h).padStart(2,'0')}:00 — ${val} (0-100 index)`;
+        });
+        heatGrid.appendChild(cell);
+      });
+    }
+    heatDay?.addEventListener('change', ()=>renderHeat(Number(heatDay.value)));
+    if(heatGrid) renderHeat(0);
+
+    // === Trends chart (inline SVG) ===
+    const trendSvg = document.getElementById('trendChart');
+    const trendItem = document.getElementById('trendItem');
+    const trendNote = document.getElementById('trendNote');
+
+    function genSeries(seedBase){
+      // 6 points monthly
+      const arr = Array.from({length:6}, (_,i)=>{
+        const fluct = Math.sin(i*1.1)*8 + (Math.random()*10-5);
+        return Math.max(40, Math.round(seedBase + i*4 + fluct));
+      });
+      return arr;
+    }
+
+    const trendBases = { Americano:60, Latte:65, Sandwich:55, Pastry:50 };
+
+    function renderTrend(item='Americano'){
+      if(!trendSvg) return;
+      const w = 600, h = 200, pad = 24;
+      const data = genSeries(trendBases[item]||60);
+      const max = Math.max(...data)+10, min = Math.min(...data)-10;
+      const x = i => pad + i*( (w-2*pad)/(data.length-1) );
+      const y = v => h - pad - ( (v-min)/(max-min) )*(h-2*pad);
+      const pts = data.map((v,i)=>`${x(i)},${y(v)}`).join(' ');
+      trendSvg.innerHTML = `
+        <defs>
+          <linearGradient id="tgrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="var(--brand)"/>
+            <stop offset="100%" stop-color="var(--brand-2)"/>
+          </linearGradient>
+        </defs>
+        <polyline points="${pts}" fill="none" stroke="url(#tgrad)" stroke-width="4" stroke-linecap="round"/>
+        ${data.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="url(#tgrad)"/>`).join('')}
+      `;
+      trendNote.textContent = `${item} demand index (last 6 months, demo data).`;
+    }
+
+    trendItem?.addEventListener('change', ()=>renderTrend(trendItem.value));
+    if(trendSvg) renderTrend('Americano');
+
+    // === Competitor Summary ===
+    const sumForm = document.getElementById('summaryForm');
+    const sumBox = document.getElementById('summaryBox');
+
+    function makeSummary(area, item){
+      const ds = getDataset();
+      const rows = (ds[item]||[]).filter(r=>!area || r.area.toLowerCase().includes(area.toLowerCase()));
+      const prices = rows.map(r=>r.price);
+      const avg = prices.length? Math.round(prices.reduce((a,b)=>a+b,0)/prices.length): null;
+      const comps = ['Lab Coffee', 'Street Bean', 'Harbor Cafe', 'Moon Bakery', 'Vista Roasters']
+        .sort(()=>0.5-Math.random()).slice(0,3)
+        .map((name,i)=>{
+          const p = avg? Math.round(avg + (i-1)* (Math.random()*400-200)) : Math.round(3000 + Math.random()*1500);
+          const delta = avg? (p-avg): 0;
+          return { name, price:p, delta };
+        });
+      const tips = avg? [
+        deltaTip(avg, -200),
+        'Consider early opening (6:30–7:00) if nearby shops open late.',
+        'Bundle pastry + Americano at a slight discount to raise AOV.'
+      ]: ['Add more data to unlock tailored pricing tips.'];
+
+      const rowsHtml = comps.map(c=>`
+        <tr>
+          <td style="padding:8px;border-bottom:1px solid var(--stroke)">${c.name}</td>
+          <td style="padding:8px;border-bottom:1px solid var(--stroke)">${c.price.toLocaleString()}₩</td>
+          <td style="padding:8px;border-bottom:1px solid var(--stroke); color:${c.delta===0?'var(--muted)':(c.delta>0?'#fca5a5':'#86efac')}">${c.delta>0?'+':''}${c.delta.toLocaleString()}₩ vs avg</td>
+        </tr>
+      `).join('');
+
+      sumBox.innerHTML = `
+        <div style="display:grid; grid-template-columns:1.1fr .9fr; gap:12px">
+          <div>
+            <p class="muted" style="margin:0 0 6px">Area: <strong>${area||'All'}</strong> · Item: <strong>${item}</strong></p>
+            <p style="margin:0 0 8px">Neighborhood average: <strong>${avg? avg.toLocaleString()+'₩':'n/a'}</strong></p>
+            <div style="overflow:auto">
+              <table style="width:100%; border-collapse:collapse">
+                <thead><tr><th style="text-align:left; padding:8px; border-bottom:1px solid var(--stroke)">Shop</th><th style="text-align:left; padding:8px; border-bottom:1px solid var(--stroke)">Price</th><th style="text-align:left; padding:8px; border-bottom:1px solid var(--stroke)">Delta</th></tr></thead>
+                <tbody>${rowsHtml}</tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <h4 style="margin:0 0 8px">Positioning tips</h4>
+            <ul style="margin:0; padding-left:18px">
+              ${tips.map(t=>`<li>${t}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+      `;
+    }
+
+    function deltaTip(avg, offset){
+      const target = avg + offset;
+      return `Price ${offset<0? 'slightly below':'slightly above'} avg (${target.toLocaleString()}₩) to signal ${offset<0? 'value':'premium'} while protecting margin.`;
+    }
+
+    sumForm?.addEventListener('submit', e=>{
+      e.preventDefault();
+      const fd = new FormData(sumForm);
+      makeSummary(fd.get('area'), fd.get('item'));
+    });
+
+    // Default tab state
+    document.querySelector('#featTabs [data-tab="benchmarks"]').click();
+
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
