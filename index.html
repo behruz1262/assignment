@@ -1,379 +1,439 @@
-import React from "react";
-import { Check, Coffee, Clock, MapPin, Smartphone, Train, Leaf } from "lucide-react";
-
-/**
- * This version removes shadcn/ui imports and the @/ path alias so it works out-of-the-box
- * with any React + Tailwind setup. It includes lightweight Button/Card components below.
- */
-
-// --- tiny className combiner ---
-function cx(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-// --- Minimal UI primitives (Button/Card) ---
-function Button({
-  children,
-  className,
-  variant = "default",
-  size = "base",
-  ...props
-}) {
-  const base = "inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400/50 disabled:opacity-50 disabled:pointer-events-none";
-  const sizes = {
-    base: "h-10 px-4 py-2 text-sm rounded-xl",
-    lg: "h-11 px-5 py-2.5 text-sm rounded-2xl",
-  };
-  const variants = {
-    default: "bg-slate-900 text-white hover:bg-slate-800",
-    outline: "border border-slate-300 text-slate-900 hover:bg-slate-50",
-    secondary: "bg-white/10 text-white border border-white/20 hover:bg-white/15",
-  };
-  return (
-    <button className={cx(base, sizes[size], variants[variant], className)} {...props}>
-      {children}
-    </button>
-  );
-}
-
-function Card({ className, children }) {
-  return (
-    <div className={cx("border border-slate-200 bg-white shadow-sm", "rounded-xl", className)}>
-      {children}
-    </div>
-  );
-}
-function CardHeader({ className, children }) {
-  return <div className={cx("p-4", className)}>{children}</div>;
-}
-function CardTitle({ className, children }) {
-  return <h3 className={cx("font-semibold leading-none tracking-tight", className)}>{children}</h3>;
-}
-function CardContent({ className, children }) {
-  return <div className={cx("p-4 pt-0", className)}>{children}</div>;
-}
-
-export default function DawnhausLanding() {
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white text-slate-900">
-      {/* NAVBAR */}
-      <header className="sticky top-0 z-40 backdrop-blur bg-white/70 border-b border-slate-200">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-2xl bg-slate-900 text-white grid place-items-center">
-              <Coffee className="h-5 w-5" />
-            </div>
-            <span className="font-extrabold tracking-wide text-xl">DAWNHAUS</span>
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DAWNHAUS — Open from 4:30 a.m.</title>
+    <meta name="description" content="Premium coffee, healthy grab-and-go breakfasts, and guaranteed dawn openings near stations and bus routes. Open from 4:30 a.m." />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui"] },
+            boxShadow: { soft: "0 10px 30px rgba(15,23,42,.08)" }
+          }
+        }
+      }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      /* Tiny extras */
+      .glass { backdrop-filter: blur(10px); }
+      .container { max-width: 1152px; }
+      .nav-link{position:relative}
+      .nav-link::after{content:"";position:absolute;left:0;bottom:-6px;height:2px;width:0;background:#0f172a;transition:width .2s}
+      .nav-link:hover::after{width:100%}
+    </style>
+  </head>
+  <body class="bg-gradient-to-b from-slate-50 to-white text-slate-900 font-sans">
+    <!-- NAVBAR -->
+    <header id="top" class="sticky top-0 z-40 glass bg-white/70 border-b border-slate-200/60">
+      <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <a href="#top" class="flex items-center gap-3">
+          <div class="h-9 w-9 rounded-2xl bg-slate-900 text-white grid place-items-center">
+            <i data-lucide="coffee" class="w-5 h-5"></i>
           </div>
-          <nav className="hidden md:flex items-center gap-6 text-sm">
-            <a href="#how" className="hover:text-slate-600">How it works</a>
-            <a href="#why" className="hover:text-slate-600">Why DAWNHAUS</a>
-            <a href="#mission" className="hover:text-slate-600">Mission</a>
-            <a href="#locations" className="hover:text-slate-600">Locations</a>
-            <a href="#join" className="hover:text-slate-600">Franchise</a>
-          </nav>
-          <div className="flex items-center gap-3">
-            <Button className="hidden sm:inline-flex rounded-2xl">Download App</Button>
-            <Button variant="outline" className="rounded-2xl">KR / EN</Button>
-          </div>
+          <span class="font-extrabold tracking-wide text-xl">DAWNHAUS</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-sm">
+          <a href="#how" class="hover:text-slate-700 nav-link">How it works</a>
+          <a href="#why" class="hover:text-slate-700 nav-link">Why DAWNHAUS</a>
+          <a href="#mission" class="hover:text-slate-700 nav-link">Mission</a>
+          <a href="#locations" class="hover:text-slate-700 nav-link">Locations</a>
+          <a href="#join" class="hover:text-slate-700 nav-link">Franchise</a>
+        </nav>
+        <div class="flex items-center gap-3">
+          <button id="downloadBtn" class="hidden sm:inline-flex h-10 px-4 rounded-2xl bg-slate-900 text-white hover:bg-slate-800 text-sm">Download App</button>
+          <button id="langBtn" class="h-10 px-4 rounded-2xl border border-slate-300 hover:bg-slate-50 text-sm">KR / EN</button>
+          <button id="mobileMenuBtn" class="md:hidden h-10 w-10 grid place-items-center rounded-xl border border-slate-300 hover:bg-slate-50">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
         </div>
-      </header>
-
-      {/* HERO */}
-      <section className="relative overflow-hidden">
-        <div className="max-w-6xl mx-auto px-4 py-20 grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <p className="uppercase text-xs tracking-widest text-slate-500 mb-3">Korea’s First Early Coffee Network</p>
-            <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
-              Open from <span className="text-slate-900">4:30 a.m.</span>
-              <span className="block text-slate-500 text-3xl md:text-4xl mt-3">당신의 이른 아침을 위해</span>
-            </h1>
-            <p className="mt-6 text-lg text-slate-700">
-              Premium coffee, healthy grab-and-go breakfasts, and guaranteed dawn openings near stations and bus routes.
-              <span className="block">역세권에서 4시 30분 오픈. 미리 주문하고 바로 픽업하세요.</span>
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button size="lg" className="rounded-2xl">Pre‑order in App</Button>
-              <Button size="lg" variant="outline" className="rounded-2xl">Find a DAWNHAUS</Button>
-            </div>
-            <div className="mt-6 flex items-center gap-4 text-sm text-slate-600">
-              <div className="flex items-center gap-2"><Clock className="h-4 w-4"/>4:30 a.m. daily</div>
-              <div className="flex items-center gap-2"><Train className="h-4 w-4"/>Near subway/bus</div>
-              <div className="flex items-center gap-2"><Leaf className="h-4 w-4"/>Sustainable</div>
-            </div>
-          </div>
-          <div className="relative">
-            {/* Mock device / hero art */}
-            <div className="aspect-[4/5] rounded-3xl bg-gradient-to-br from-slate-900 to-slate-700 shadow-2xl p-6 text-white">
-              <div className="flex items-center justify-between">
-                <span className="text-slate-300 text-xs">DAWNHAUS</span>
-                <span className="text-slate-300 text-xs">04:12</span>
-              </div>
-              <div className="mt-8">
-                <h3 className="text-2xl font-black">Pre‑order Ready</h3>
-                <p className="text-slate-300 mt-2">Busan Seomyeon · 280 m</p>
-              </div>
-              <div className="mt-8 grid grid-cols-2 gap-3">
-                {[
-                  { title: "Dawn Americano", sub: "₩3,200" },
-                  { title: "Oat Latte", sub: "₩4,600" },
-                  { title: "Egg Brioche", sub: "₩3,900" },
-                  { title: "Yogurt Bowl", sub: "₩3,500" },
-                ].map((item) => (
-                  <Card key={item.title} className="bg-white/10 border-white/10 text-white">
-                    <CardHeader className="p-3">
-                      <CardTitle className="text-sm font-semibold">{item.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0 pb-3 px-3 text-xs text-slate-200">{item.sub}</CardContent>
-                  </Card>
-                ))}
-              </div>
-              <div className="mt-10">
-                <Button className="w-full rounded-xl bg-white text-slate-900 hover:bg-slate-100">
-                  <Smartphone className="h-4 w-4 mr-2"/> Show QR for Pickup
-                </Button>
-              </div>
-            </div>
-            <div className="absolute -bottom-6 -right-6 w-40 h-40 rounded-full bg-amber-200 blur-2xl opacity-70"/>
-            <div className="absolute -top-6 -left-6 w-28 h-28 rounded-full bg-rose-200 blur-2xl opacity-70"/>
-          </div>
+      </div>
+      <!-- mobile menu -->
+      <div id="mobileMenu" class="md:hidden hidden border-t border-slate-200 bg-white/95">
+        <div class="container mx-auto px-4 py-3 grid gap-2 text-sm">
+          <a class="py-2" href="#how">How it works</a>
+          <a class="py-2" href="#why">Why DAWNHAUS</a>
+          <a class="py-2" href="#mission">Mission</a>
+          <a class="py-2" href="#locations">Locations</a>
+          <a class="py-2" href="#join">Franchise</a>
         </div>
-      </section>
+      </div>
+    </header>
 
-      {/* SOCIAL PROOF / TAGLINE */}
-      <section className="py-6 bg-slate-900 text-white">
-        <div className="max-w-6xl mx-auto px-4 flex flex-wrap items-center justify-between gap-4">
-          <p className="text-sm md:text-base opacity-90">
-            “When Seoul sleeps, DAWNHAUS wakes.” — 4:30 a.m. daily openings across Korea by 2027
+    <!-- HERO -->
+    <section class="relative overflow-hidden">
+      <div class="container mx-auto px-4 py-20 grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <p class="uppercase text-xs tracking-widest text-slate-500 mb-3">Korea’s First Early Coffee Network</p>
+          <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
+            Open from <span class="text-slate-900">4:30 a.m.</span>
+            <span class="block text-slate-500 text-3xl md:text-4xl mt-3" data-lang="kr">당신의 이른 아침을 위해</span>
+          </h1>
+          <p class="mt-6 text-lg text-slate-700">
+            Premium coffee, healthy grab-and-go breakfasts, and guaranteed dawn openings near stations and bus routes.
+            <span class="block" data-lang="kr">역세권에서 4시 30분 오픈. 미리 주문하고 바로 픽업하세요.</span>
           </p>
-          <div className="flex items-center gap-6 text-xs opacity-80">
-            <span>Seoul</span>
-            <span>Busan</span>
-            <span>Daegu</span>
-            <span>Incheon</span>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="#download" class="h-11 px-5 rounded-2xl bg-slate-900 text-white hover:bg-slate-800 text-sm inline-flex items-center">Pre‑order in App</a>
+            <a href="#locations" class="h-11 px-5 rounded-2xl border border-slate-300 hover:bg-slate-50 text-sm inline-flex items-center">Find a DAWNHAUS</a>
+          </div>
+          <div class="mt-6 flex items-center gap-4 text-sm text-slate-600">
+            <div class="flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4"></i>4:30 a.m. daily</div>
+            <div class="flex items-center gap-2"><i data-lucide="train" class="w-4 h-4"></i>Near subway/bus</div>
+            <div class="flex items-center gap-2"><i data-lucide="leaf" class="w-4 h-4"></i>Sustainable</div>
           </div>
         </div>
-      </section>
-
-      {/* MISSION */}
-      <section id="mission" className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-extrabold">Our Mission <span className="text-slate-400">/ 우리의 미션</span></h2>
-          <p className="mt-6 text-lg text-slate-700 max-w-3xl">
-            To fuel Korea’s early risers with warmth, energy, and purpose—one dawn at a time.
-            <span className="block text-slate-600 mt-2">한국의 이른 아침을 움직이는 사람들에게 따뜻함과 에너지를 전하고, 매일의 시작에 목적을 더합니다.</span>
-          </p>
-          <div className="mt-10 grid md:grid-cols-2 gap-6">
-            <Card className="rounded-2xl">
-              <CardHeader>
-                <CardTitle className="text-base font-bold">Access & Reliability</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-slate-700">
-                <ul className="space-y-2">
-                  <li className="flex gap-2 items-start"><Check className="h-4 w-4 mt-0.5"/> 4:30 a.m. daily openings near transit hubs.</li>
-                  <li className="flex gap-2 items-start"><Check className="h-4 w-4 mt-0.5"/> Designed for shift workers, students, and creators.</li>
-                </ul>
-              </CardContent>
-            </Card>
-            <Card className="rounded-2xl">
-              <CardHeader>
-                <CardTitle className="text-base font-bold">Health & Sustainability</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-slate-700">
-                <ul className="space-y-2">
-                  <li className="flex gap-2 items-start"><Check className="h-4 w-4 mt-0.5"/> Healthy, fairly priced grab‑and‑go breakfasts.</li>
-                  <li className="flex gap-2 items-start"><Check className="h-4 w-4 mt-0.5"/> Local roasters, reusable systems, eco packaging.</li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* HOW IT WORKS */}
-      <section id="how" className="py-20">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-extrabold">How it works <span className="text-slate-400">/ 이용 방법</span></h2>
-          <div className="mt-10 grid md:grid-cols-4 gap-6">
-            {[
-              {
-                icon: <Smartphone className="h-5 w-5"/> ,
-                title: "Order in App",
-                kr: "앱에서 미리 주문",
-                desc: "Choose your café, set pickup time, customize your drink.",
-              },
-              {
-                icon: <Clock className="h-5 w-5"/> ,
-                title: "Skip the wait",
-                kr: "줄 서지 마세요",
-                desc: "Tap your QR on arrival. Your order is ready at 4:30 a.m.",
-              },
-              {
-                icon: <MapPin className="h-5 w-5"/> ,
-                title: "Transit‑friendly",
-                kr: "역세권 위치",
-                desc: "Always near subway & bus routes for stress‑free commutes.",
-              },
-              {
-                icon: <Leaf className="h-5 w-5"/> ,
-                title: "Sustainable",
-                kr: "지속 가능",
-                desc: "Local roasters, reusable cups, and eco packaging.",
-              },
-            ].map((item) => (
-              <Card key={item.title} className="rounded-2xl">
-                <CardHeader className="flex flex-row items-center gap-3">
-                  <div className="h-9 w-9 rounded-xl bg-slate-900 text-white grid place-items-center">
-                    {item.icon}
-                  </div>
-                  <CardTitle className="text-base font-bold">{item.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="text-sm text-slate-600">
-                  <p className="font-medium text-slate-900 mb-1">{item.kr}</p>
-                  <p>{item.desc}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* WHY DAWNHAUS */}
-      <section id="why" className="py-20 bg-slate-50">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-extrabold">Why DAWNHAUS <span className="text-slate-400">/ 왜 DAWNHAUS인가</span></h2>
-          <div className="mt-10 grid md:grid-cols-3 gap-6">
-            {[
-              { title: "Earliest Openings", sub: "국내 최조 4:30 a.m. 오픈", points: ["Reliable daily openings","Perfect for nurses, students, logistics crews","Beat the rush, own your morning"] },
-              { title: "Healthy Grab‑and‑Go", sub: "건강한 조식 메뉴", points: ["Protein brioche, yogurt bowls, fresh bakes","Calorie & allergy labels","Refill‑friendly pricing"] },
-              { title: "App‑First Experience", sub: "앱 중심의 경험", points: ["Pre‑order & QR pickup","Morning Member rewards","Transit & weather integrations"] },
-            ].map((block) => (
-              <Card key={block.title} className="rounded-2xl">
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold">{block.title}</CardTitle>
-                  <p className="text-slate-500 text-sm">{block.sub}</p>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 text-sm text-slate-700">
-                    {block.points.map((p) => (
-                      <li key={p} className="flex items-start gap-2"><Check className="h-4 w-4 mt-0.5"/>{p}</li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* LOCATIONS */}
-      <section id="locations" className="py-20">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-extrabold">Locations <span className="text-slate-400">/ 지점 안내</span></h2>
-          <p className="mt-3 text-slate-600">Opening sequence: Seomyeon (Busan) → Gangnam (Seoul) → Songdo (Incheon) → Dongseongno (Daegu)</p>
-          <div className="mt-8 grid md:grid-cols-4 gap-6">
-            {[
-              { city: "Busan", area: "Seomyeon", eta: "Open Now" },
-              { city: "Seoul", area: "Gangnam", eta: "Q1 2026" },
-              { city: "Incheon", area: "Songdo", eta: "Q2 2026" },
-              { city: "Daegu", area: "Dongseongno", eta: "Q3 2026" },
-            ].map((loc) => (
-              <Card key={loc.area} className="rounded-2xl">
-                <CardHeader>
-                  <CardTitle className="text-lg font-bold">{loc.city}</CardTitle>
-                  <p className="text-slate-500 text-sm">{loc.area}</p>
-                </CardHeader>
-                <CardContent className="text-sm text-slate-700">
-                  <p>Status: <span className="font-semibold">{loc.eta}</span></p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FRANCHISE / CTA */}
-      <section id="join" className="py-20 bg-slate-900 text-white">
-        <div className="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-10 items-center">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-extrabold">Join the Dawn Movement</h2>
-            <p className="mt-4 text-slate-300">
-              Partner with DAWNHAUS to bring early‑hour coffee culture to your district.
-              <span className="block">가맹 및 파트너십 문의를 환영합니다.</span>
-            </p>
-            <div className="mt-6 flex gap-3">
-              <Button size="lg" className="rounded-2xl">Apply for Franchise</Button>
-              <Button size="lg" variant="secondary" className="rounded-2xl">Corporate Partnerships</Button>
+        <div class="relative">
+          <!-- Mock device / hero art -->
+          <div class="aspect-[4/5] rounded-3xl bg-gradient-to-br from-slate-900 to-slate-700 shadow-soft p-6 text-white">
+            <div class="flex items-center justify-between">
+              <span class="text-slate-300 text-xs">DAWNHAUS</span>
+              <span class="text-slate-300 text-xs" id="clockMini">04:12</span>
             </div>
-            <ul className="mt-6 space-y-2 text-slate-300 text-sm">
-              <li className="flex items-start gap-2"><Check className="h-4 w-4 mt-0.5"/> Site selection playbook for transit hubs</li>
-              <li className="flex items-start gap-2"><Check className="h-4 w-4 mt-0.5"/> Predictable 4:30 a.m. staffing model</li>
-              <li className="flex items-start gap-2"><Check className="h-4 w-4 mt-0.5"/> Centralized roasting & menu ops</li>
-            </ul>
-          </div>
-          <div className="relative">
-            <div className="rounded-3xl bg-white/5 border border-white/10 p-6">
-              <div className="grid grid-cols-2 gap-4 text-slate-100 text-sm">
-                {[
-                  { k: "Opening Time", v: "04:30 daily" },
-                  { k: "Prep Window", v: "03:30–04:30" },
-                  { k: "Avg. Ticket", v: "₩5,200" },
-                  { k: "Refill Program", v: "Yes" },
-                  { k: "Sourcing", v: "Local & Fair" },
-                  { k: "Energy", v: "Eco‑optimized" },
-                ].map((row) => (
-                  <div key={row.k} className="p-3 rounded-xl bg-white/5 border border-white/10">
-                    <p className="text-slate-300 text-xs">{row.k}</p>
-                    <p className="font-semibold">{row.v}</p>
-                  </div>
-                ))}
+            <div class="mt-8">
+              <h3 class="text-2xl font-black">Pre‑order Ready</h3>
+              <p class="text-slate-300 mt-2">Busan Seomyeon · 280 m</p>
+            </div>
+            <div class="mt-8 grid grid-cols-2 gap-3">
+              <!-- Menu cards -->
+              <div class="border border-white/10 bg-white/10 text-white rounded-xl">
+                <div class="p-3"><h4 class="text-sm font-semibold">Dawn Americano</h4></div>
+                <div class="px-3 pb-3 pt-0 text-xs text-slate-200">₩3,200</div>
               </div>
-              <p className="mt-4 text-xs text-slate-300">*Figures are illustrative for the concept deck.</p>
-            </div>
-            <div className="absolute -bottom-6 -left-6 w-36 h-36 rounded-full bg-cyan-300/40 blur-2xl"/>
-          </div>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="py-12 border-t border-slate-200">
-        <div className="max-w-6xl mx-auto px-4 grid md:grid-cols-4 gap-8 text-sm">
-          <div>
-            <div className="flex items-center gap-3 mb-3">
-              <div className="h-8 w-8 rounded-xl bg-slate-900 text-white grid place-items-center">
-                <Coffee className="h-4 w-4" />
+              <div class="border border-white/10 bg-white/10 text-white rounded-xl">
+                <div class="p-3"><h4 class="text-sm font-semibold">Oat Latte</h4></div>
+                <div class="px-3 pb-3 pt-0 text-xs text-slate-200">₩4,600</div>
               </div>
-              <span className="font-bold">DAWNHAUS</span>
+              <div class="border border-white/10 bg-white/10 text-white rounded-xl">
+                <div class="p-3"><h4 class="text-sm font-semibold">Egg Brioche</h4></div>
+                <div class="px-3 pb-3 pt-0 text-xs text-slate-200">₩3,900</div>
+              </div>
+              <div class="border border-white/10 bg-white/10 text-white rounded-xl">
+                <div class="p-3"><h4 class="text-sm font-semibold">Yogurt Bowl</h4></div>
+                <div class="px-3 pb-3 pt-0 text-xs text-slate-200">₩3,500</div>
+              </div>
             </div>
-            <p className="text-slate-600">Open from 4:30 a.m. · Seoul · Busan · Incheon · Daegu</p>
+            <div class="mt-10">
+              <button class="w-full h-11 rounded-xl bg-white text-slate-900 hover:bg-slate-100 text-sm inline-flex items-center justify-center" id="qrBtn">
+                <i data-lucide="smartphone" class="w-4 h-4 mr-2"></i> Show QR for Pickup
+              </button>
+            </div>
           </div>
-          <div>
-            <p className="font-semibold mb-3">Company</p>
-            <ul className="space-y-2 text-slate-600">
-              <li><a className="hover:text-slate-900" href="#how">About</a></li>
-              <li><a className="hover:text-slate-900" href="#why">Our Model</a></li>
-              <li><a className="hover:text-slate-900" href="#join">Franchise</a></li>
+          <div class="absolute -bottom-6 -right-6 w-40 h-40 rounded-full bg-amber-200 blur-2xl opacity-70"></div>
+          <div class="absolute -top-6 -left-6 w-28 h-28 rounded-full bg-rose-200 blur-2xl opacity-70"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOCIAL PROOF / TAGLINE -->
+    <section class="py-6 bg-slate-900 text-white">
+      <div class="container mx-auto px-4 flex flex-wrap items-center justify-between gap-4">
+        <p class="text-sm md:text-base opacity-90">“When Seoul sleeps, DAWNHAUS wakes.” — 4:30 a.m. daily openings across Korea by 2027</p>
+        <div class="flex items-center gap-6 text-xs opacity-80">
+          <span>Seoul</span>
+          <span>Busan</span>
+          <span>Daegu</span>
+          <span>Incheon</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- MISSION -->
+    <section id="mission" class="py-20 bg-white">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl md:text-4xl font-extrabold">Our Mission <span class="text-slate-400">/ 우리의 미션</span></h2>
+        <p class="mt-6 text-lg text-slate-700 max-w-3xl">
+          To fuel Korea’s early risers with warmth, energy, and purpose—one dawn at a time.
+          <span class="block text-slate-600 mt-2" data-lang="kr">한국의 이른 아침을 움직이는 사람들에게 따뜻함과 에너지를 전하고, 매일의 시작에 목적을 더합니다.</span>
+        </p>
+        <div class="mt-10 grid md:grid-cols-2 gap-6">
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-soft">
+            <div class="p-4"><h3 class="text-base font-bold">Access & Reliability</h3></div>
+            <div class="p-4 pt-0 text-sm text-slate-700">
+              <ul class="space-y-2">
+                <li class="flex gap-2 items-start"><i data-lucide="check" class="w-4 h-4 mt-0.5"></i>4:30 a.m. daily openings near transit hubs.</li>
+                <li class="flex gap-2 items-start"><i data-lucide="check" class="w-4 h-4 mt-0.5"></i>Designed for shift workers, students, and creators.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-soft">
+            <div class="p-4"><h3 class="text-base font-bold">Health & Sustainability</h3></div>
+            <div class="p-4 pt-0 text-sm text-slate-700">
+              <ul class="space-y-2">
+                <li class="flex gap-2 items-start"><i data-lucide="check" class="w-4 h-4 mt-0.5"></i>Healthy, fairly priced grab‑and‑go breakfasts.</li>
+                <li class="flex gap-2 items-start"><i data-lucide="check" class="w-4 h-4 mt-0.5"></i>Local roasters, reusable systems, eco packaging.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how" class="py-20">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl md:text-4xl font-extrabold">How it works <span class="text-slate-400">/ 이용 방법</span></h2>
+        <div class="mt-10 grid md:grid-cols-4 gap-6">
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-soft">
+            <div class="p-4 flex items-center gap-3">
+              <div class="h-9 w-9 rounded-xl bg-slate-900 text-white grid place-items-center"><i data-lucide="smartphone" class="w-5 h-5"></i></div>
+              <h3 class="text-base font-bold">Order in App</h3>
+            </div>
+            <div class="p-4 pt-0 text-sm text-slate-600">
+              <p class="font-medium text-slate-900 mb-1" data-lang="kr">앱에서 미리 주문</p>
+              <p>Choose your café, set pickup time, customize your drink.</p>
+            </div>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-soft">
+            <div class="p-4 flex items-center gap-3">
+              <div class="h-9 w-9 rounded-xl bg-slate-900 text-white grid place-items-center"><i data-lucide="clock" class="w-5 h-5"></i></div>
+              <h3 class="text-base font-bold">Skip the wait</h3>
+            </div>
+            <div class="p-4 pt-0 text-sm text-slate-600">
+              <p class="font-medium text-slate-900 mb-1" data-lang="kr">줄 서지 마세요</p>
+              <p>Tap your QR on arrival. Your order is ready at 4:30 a.m.</p>
+            </div>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-soft">
+            <div class="p-4 flex items-center gap-3">
+              <div class="h-9 w-9 rounded-xl bg-slate-900 text-white grid place-items-center"><i data-lucide="map-pin" class="w-5 h-5"></i></div>
+              <h3 class="text-base font-bold">Transit‑friendly</h3>
+            </div>
+            <div class="p-4 pt-0 text-sm text-slate-600">
+              <p class="font-medium text-slate-900 mb-1" data-lang="kr">역세권 위치</p>
+              <p>Always near subway & bus routes for stress‑free commutes.</p>
+            </div>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-soft">
+            <div class="p-4 flex items-center gap-3">
+              <div class="h-9 w-9 rounded-xl bg-slate-900 text-white grid place-items-center"><i data-lucide="leaf" class="w-5 h-5"></i></div>
+              <h3 class="text-base font-bold">Sustainable</h3>
+            </div>
+            <div class="p-4 pt-0 text-sm text-slate-600">
+              <p class="font-medium text-slate-900 mb-1" data-lang="kr">지속 가능</p>
+              <p>Local roasters, reusable cups, and eco packaging.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY DAWNHAUS -->
+    <section id="why" class="py-20 bg-slate-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl md:text-4xl font-extrabold">Why DAWNHAUS <span class="text-slate-400">/ 왜 DAWNHAUS인가</span></h2>
+        <div class="mt-10 grid md:grid-cols-3 gap-6">
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-soft p-4">
+            <h3 class="text-xl font-bold">Earliest Openings</h3>
+            <p class="text-slate-500 text-sm">국내 최초 4:30 a.m. 오픈</p>
+            <ul class="mt-4 space-y-2 text-sm text-slate-700">
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 mt-0.5"></i>Reliable daily openings</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 mt-0.5"></i>Perfect for nurses, students, logistics crews</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 mt-0.5"></i>Beat the rush, own your morning</li>
             </ul>
           </div>
-          <div>
-            <p className="font-semibold mb-3">Support</p>
-            <ul className="space-y-2 text-slate-600">
-              <li>Contact: hello@dawnhaus.kr</li>
-              <li>Careers</li>
-              <li>Press Kit</li>
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-soft p-4">
+            <h3 class="text-xl font-bold">Healthy Grab‑and‑Go</h3>
+            <p class="text-slate-500 text-sm">건강한 조식 메뉴</p>
+            <ul class="mt-4 space-y-2 text-sm text-slate-700">
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 mt-0.5"></i>Protein brioche, yogurt bowls, fresh bakes</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 mt-0.5"></i>Calorie & allergy labels</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 mt-0.5"></i>Refill‑friendly pricing</li>
             </ul>
           </div>
-          <div>
-            <p className="font-semibold mb-3">Legal</p>
-            <ul className="space-y-2 text-slate-600">
-              <li>Privacy Policy</li>
-              <li>Terms of Service</li>
-              <li>Franchise Disclosure (KR)</li>
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-soft p-4">
+            <h3 class="text-xl font-bold">App‑First Experience</h3>
+            <p class="text-slate-500 text-sm">앱 중심의 경험</p>
+            <ul class="mt-4 space-y-2 text-sm text-slate-700">
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 mt-0.5"></i>Pre‑order & QR pickup</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 mt-0.5"></i>Morning Member rewards</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 mt-0.5"></i>Transit & weather integrations</li>
             </ul>
           </div>
         </div>
-        <div className="max-w-6xl mx-auto px-4 mt-8 text-xs text-slate-500">© {new Date().getFullYear()} DAWNHAUS Co., Ltd. All rights reserved.</div>
-      </footer>
+      </div>
+    </section>
+
+    <!-- LOCATIONS -->
+    <section id="locations" class="py-20">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl md:text-4xl font-extrabold">Locations <span class="text-slate-400">/ 지점 안내</span></h2>
+        <p class="mt-3 text-slate-600">Opening sequence: Seomyeon (Busan) → Gangnam (Seoul) → Songdo (Incheon) → Dongseongno (Daegu)</p>
+        <div class="mt-8 grid md:grid-cols-4 gap-6">
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-soft p-4">
+            <h4 class="text-lg font-bold">Busan</h4>
+            <p class="text-slate-500 text-sm">Seomyeon</p>
+            <p class="text-sm text-slate-700 mt-2">Status: <span class="font-semibold">Open Now</span></p>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-soft p-4">
+            <h4 class="text-lg font-bold">Seoul</h4>
+            <p class="text-slate-500 text-sm">Gangnam</p>
+            <p class="text-sm text-slate-700 mt-2">Status: <span class="font-semibold">Q1 2026</span></p>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-soft p-4">
+            <h4 class="text-lg font-bold">Incheon</h4>
+            <p class="text-slate-500 text-sm">Songdo</p>
+            <p class="text-sm text-slate-700 mt-2">Status: <span class="font-semibold">Q2 2026</span></p>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-soft p-4">
+            <h4 class="text-lg font-bold">Daegu</h4>
+            <p class="text-slate-500 text-sm">Dongseongno</p>
+            <p class="text-sm text-slate-700 mt-2">Status: <span class="font-semibold">Q3 2026</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FRANCHISE / CTA -->
+    <section id="join" class="py-20 bg-slate-900 text-white">
+      <div class="container mx-auto px-4 grid md:grid-cols-2 gap-10 items-center">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-extrabold">Join the Dawn Movement</h2>
+          <p class="mt-4 text-slate-300">Partner with DAWNHAUS to bring early‑hour coffee culture to your district. <span class="block" data-lang="kr">가맹 및 파트너십 문의를 환영합니다.</span></p>
+          <div class="mt-6 flex gap-3">
+            <a href="#franchise" class="h-11 px-5 rounded-2xl bg-white text-slate-900 hover:bg-slate-100 text-sm inline-flex items-center">Apply for Franchise</a>
+            <a href="#partners" class="h-11 px-5 rounded-2xl border border-white/20 bg-white/10 hover:bg-white/15 text-sm inline-flex items-center">Corporate Partnerships</a>
+          </div>
+          <ul class="mt-6 space-y-2 text-slate-300 text-sm">
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 mt-0.5"></i>Site selection playbook for transit hubs</li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 mt-0.5"></i>Predictable 4:30 a.m. staffing model</li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 mt-0.5"></i>Centralized roasting & menu ops</li>
+          </ul>
+        </div>
+        <div class="relative">
+          <div class="rounded-3xl bg-white/5 border border-white/10 p-6">
+            <div class="grid grid-cols-2 gap-4 text-slate-100 text-sm">
+              <div class="p-3 rounded-xl bg-white/5 border border-white/10">
+                <p class="text-slate-300 text-xs">Opening Time</p>
+                <p class="font-semibold">04:30 daily</p>
+              </div>
+              <div class="p-3 rounded-xl bg-white/5 border border-white/10">
+                <p class="text-slate-300 text-xs">Prep Window</p>
+                <p class="font-semibold">03:30–04:30</p>
+              </div>
+              <div class="p-3 rounded-xl bg-white/5 border border-white/10">
+                <p class="text-slate-300 text-xs">Avg. Ticket</p>
+                <p class="font-semibold">₩5,200</p>
+              </div>
+              <div class="p-3 rounded-xl bg-white/5 border border-white/10">
+                <p class="text-slate-300 text-xs">Refill Program</p>
+                <p class="font-semibold">Yes</p>
+              </div>
+              <div class="p-3 rounded-xl bg-white/5 border border-white/10">
+                <p class="text-slate-300 text-xs">Sourcing</p>
+                <p class="font-semibold">Local & Fair</p>
+              </div>
+              <div class="p-3 rounded-xl bg-white/5 border border-white/10">
+                <p class="text-slate-300 text-xs">Energy</p>
+                <p class="font-semibold">Eco‑optimized</p>
+              </div>
+            </div>
+            <p class="mt-4 text-xs text-slate-300">*Figures are illustrative for the concept deck.</p>
+          </div>
+          <div class="absolute -bottom-6 -left-6 w-36 h-36 rounded-full bg-cyan-300/40 blur-2xl"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-12 border-t border-slate-200">
+      <div class="container mx-auto px-4 grid md:grid-cols-4 gap-8 text-sm">
+        <div>
+          <div class="flex items-center gap-3 mb-3">
+            <div class="h-8 w-8 rounded-xl bg-slate-900 text-white grid place-items-center">
+              <i data-lucide="coffee" class="w-4 h-4"></i>
+            </div>
+            <span class="font-bold">DAWNHAUS</span>
+          </div>
+          <p class="text-slate-600">Open from 4:30 a.m. · Seoul · Busan · Incheon · Daegu</p>
+        </div>
+        <div>
+          <p class="font-semibold mb-3">Company</p>
+          <ul class="space-y-2 text-slate-600">
+            <li><a class="hover:text-slate-900" href="#how">About</a></li>
+            <li><a class="hover:text-slate-900" href="#why">Our Model</a></li>
+            <li><a class="hover:text-slate-900" href="#join">Franchise</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="font-semibold mb-3">Support</p>
+          <ul class="space-y-2 text-slate-600">
+            <li>Contact: hello@dawnhaus.kr</li>
+            <li>Careers</li>
+            <li>Press Kit</li>
+          </ul>
+        </div>
+        <div>
+          <p class="font-semibold mb-3">Legal</p>
+          <ul class="space-y-2 text-slate-600">
+            <li>Privacy Policy</li>
+            <li>Terms of Service</li>
+            <li>Franchise Disclosure (KR)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="container mx-auto px-4 mt-8 text-xs text-slate-500">© <span id="year"></span> DAWNHAUS Co., Ltd. All rights reserved.</div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="qrModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center p-4">
+      <div class="bg-white rounded-2xl max-w-sm w-full p-6">
+        <div class="flex items-center justify-between">
+          <h3 class="font-semibold">Pickup QR (Demo)</h3>
+          <button id="qrClose" class="h-9 w-9 grid place-items-center rounded-lg hover:bg-slate-100"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+        <div class="mt-4 grid place-items-center">
+          <div class="h-40 w-40 rounded-xl bg-slate-200 grid place-items-center text-slate-500 text-xs">QR CODE</div>
+        </div>
+        <button id="qrDone" class="mt-6 w-full h-10 rounded-xl bg-slate-900 text-white hover:bg-slate-800 text-sm">Done</button>
+      </div>
     </div>
-  );
-}
+
+    <!-- JS: icons, lang toggle, modal, clock, mobile menu -->
+    <script>
+      // icons
+      lucide.createIcons();
+      // year
+      document.getElementById('year').textContent = new Date().getFullYear();
+      // mini clock in hero
+      const cm = document.getElementById('clockMini');
+      function tick(){ const d=new Date(); cm.textContent = d.toTimeString().slice(0,5); }
+      tick(); setInterval(tick, 30*1000);
+      // language toggle (toggle Korean spans)
+      const langBtn=document.getElementById('langBtn');
+      let showKR=true;
+      langBtn.addEventListener('click',()=>{
+        showKR = !showKR;
+        document.querySelectorAll('[data-lang="kr"]').forEach(el=>{
+          el.style.display = showKR ? '' : 'none';
+        });
+        langBtn.textContent = showKR ? 'KR / EN' : 'EN / KR';
+      });
+      // mobile menu
+      const mBtn=document.getElementById('mobileMenuBtn');
+      const mWrap=document.getElementById('mobileMenu');
+      mBtn.addEventListener('click',()=>{ mWrap.classList.toggle('hidden'); });
+      mWrap.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mWrap.classList.add('hidden')));
+      // modal
+      const qrBtn=document.getElementById('qrBtn');
+      const qrModal=document.getElementById('qrModal');
+      const qrClose=document.getElementById('qrClose');
+      const qrDone=document.getElementById('qrDone');
+      function openModal(){ qrModal.classList.remove('hidden'); qrModal.classList.add('flex'); }
+      function closeModal(){ qrModal.classList.add('hidden'); qrModal.classList.remove('flex'); }
+      qrBtn.addEventListener('click', openModal);
+      qrClose.addEventListener('click', closeModal);
+      qrDone.addEventListener('click', closeModal);
+      qrModal.addEventListener('click', (e)=>{ if(e.target===qrModal) closeModal(); });
+      // fake download
+      document.getElementById('downloadBtn').addEventListener('click',()=>{
+        alert('App coming soon. Join the waitlist at hello@dawnhaus.kr');
+      });
+    </script>
+  </body>
+</html>
