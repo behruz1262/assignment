@@ -1,7 +1,57 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, Coffee, Clock, MapPin, Smartphone, Train, Leaf } from "lucide-react";
+
+/**
+ * This version removes shadcn/ui imports and the @/ path alias so it works out-of-the-box
+ * with any React + Tailwind setup. It includes lightweight Button/Card components below.
+ */
+
+// --- tiny className combiner ---
+function cx(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+
+// --- Minimal UI primitives (Button/Card) ---
+function Button({
+  children,
+  className,
+  variant = "default",
+  size = "base",
+  ...props
+}) {
+  const base = "inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400/50 disabled:opacity-50 disabled:pointer-events-none";
+  const sizes = {
+    base: "h-10 px-4 py-2 text-sm rounded-xl",
+    lg: "h-11 px-5 py-2.5 text-sm rounded-2xl",
+  };
+  const variants = {
+    default: "bg-slate-900 text-white hover:bg-slate-800",
+    outline: "border border-slate-300 text-slate-900 hover:bg-slate-50",
+    secondary: "bg-white/10 text-white border border-white/20 hover:bg-white/15",
+  };
+  return (
+    <button className={cx(base, sizes[size], variants[variant], className)} {...props}>
+      {children}
+    </button>
+  );
+}
+
+function Card({ className, children }) {
+  return (
+    <div className={cx("border border-slate-200 bg-white shadow-sm", "rounded-xl", className)}>
+      {children}
+    </div>
+  );
+}
+function CardHeader({ className, children }) {
+  return <div className={cx("p-4", className)}>{children}</div>;
+}
+function CardTitle({ className, children }) {
+  return <h3 className={cx("font-semibold leading-none tracking-tight", className)}>{children}</h3>;
+}
+function CardContent({ className, children }) {
+  return <div className={cx("p-4 pt-0", className)}>{children}</div>;
+}
 
 export default function DawnhausLanding() {
   return (
@@ -39,7 +89,7 @@ export default function DawnhausLanding() {
               <span className="block text-slate-500 text-3xl md:text-4xl mt-3">당신의 이른 아침을 위해</span>
             </h1>
             <p className="mt-6 text-lg text-slate-700">
-              Premium coffee, healthy grab-and-go breakfasts, and guaranteed dawn openings near stations and bus routes. 
+              Premium coffee, healthy grab-and-go breakfasts, and guaranteed dawn openings near stations and bus routes.
               <span className="block">역세권에서 4시 30분 오픈. 미리 주문하고 바로 픽업하세요.</span>
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -104,6 +154,7 @@ export default function DawnhausLanding() {
           </div>
         </div>
       </section>
+
       {/* MISSION */}
       <section id="mission" className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4">
@@ -146,25 +197,25 @@ export default function DawnhausLanding() {
           <div className="mt-10 grid md:grid-cols-4 gap-6">
             {[
               {
-                icon: <Smartphone className="h-5 w-5"/>,
+                icon: <Smartphone className="h-5 w-5"/> ,
                 title: "Order in App",
                 kr: "앱에서 미리 주문",
                 desc: "Choose your café, set pickup time, customize your drink.",
               },
               {
-                icon: <Clock className="h-5 w-5"/>,
+                icon: <Clock className="h-5 w-5"/> ,
                 title: "Skip the wait",
                 kr: "줄 서지 마세요",
                 desc: "Tap your QR on arrival. Your order is ready at 4:30 a.m.",
               },
               {
-                icon: <MapPin className="h-5 w-5"/>,
+                icon: <MapPin className="h-5 w-5"/> ,
                 title: "Transit‑friendly",
                 kr: "역세권 위치",
                 desc: "Always near subway & bus routes for stress‑free commutes.",
               },
               {
-                icon: <Leaf className="h-5 w-5"/>,
+                icon: <Leaf className="h-5 w-5"/> ,
                 title: "Sustainable",
                 kr: "지속 가능",
                 desc: "Local roasters, reusable cups, and eco packaging.",
@@ -196,7 +247,7 @@ export default function DawnhausLanding() {
               { title: "Earliest Openings", sub: "국내 최조 4:30 a.m. 오픈", points: ["Reliable daily openings","Perfect for nurses, students, logistics crews","Beat the rush, own your morning"] },
               { title: "Healthy Grab‑and‑Go", sub: "건강한 조식 메뉴", points: ["Protein brioche, yogurt bowls, fresh bakes","Calorie & allergy labels","Refill‑friendly pricing"] },
               { title: "App‑First Experience", sub: "앱 중심의 경험", points: ["Pre‑order & QR pickup","Morning Member rewards","Transit & weather integrations"] },
-            ].map(block => (
+            ].map((block) => (
               <Card key={block.title} className="rounded-2xl">
                 <CardHeader>
                   <CardTitle className="text-xl font-bold">{block.title}</CardTitle>
@@ -204,7 +255,7 @@ export default function DawnhausLanding() {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2 text-sm text-slate-700">
-                    {block.points.map(p => (
+                    {block.points.map((p) => (
                       <li key={p} className="flex items-start gap-2"><Check className="h-4 w-4 mt-0.5"/>{p}</li>
                     ))}
                   </ul>
@@ -226,7 +277,7 @@ export default function DawnhausLanding() {
               { city: "Seoul", area: "Gangnam", eta: "Q1 2026" },
               { city: "Incheon", area: "Songdo", eta: "Q2 2026" },
               { city: "Daegu", area: "Dongseongno", eta: "Q3 2026" },
-            ].map(loc => (
+            ].map((loc) => (
               <Card key={loc.area} className="rounded-2xl">
                 <CardHeader>
                   <CardTitle className="text-lg font-bold">{loc.city}</CardTitle>
@@ -247,7 +298,7 @@ export default function DawnhausLanding() {
           <div>
             <h2 className="text-3xl md:text-4xl font-extrabold">Join the Dawn Movement</h2>
             <p className="mt-4 text-slate-300">
-              Partner with DAWNHAUS to bring early‑hour coffee culture to your district. 
+              Partner with DAWNHAUS to bring early‑hour coffee culture to your district.
               <span className="block">가맹 및 파트너십 문의를 환영합니다.</span>
             </p>
             <div className="mt-6 flex gap-3">
@@ -270,7 +321,7 @@ export default function DawnhausLanding() {
                   { k: "Refill Program", v: "Yes" },
                   { k: "Sourcing", v: "Local & Fair" },
                   { k: "Energy", v: "Eco‑optimized" },
-                ].map(row => (
+                ].map((row) => (
                   <div key={row.k} className="p-3 rounded-xl bg-white/5 border border-white/10">
                     <p className="text-slate-300 text-xs">{row.k}</p>
                     <p className="font-semibold">{row.v}</p>
